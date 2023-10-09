@@ -1,0 +1,8 @@
+POST http://localhost:3003/api/blogs
+
+{
+"title": "Miumau", 
+"author": "Petteri",
+"url": "http://kissa.com",
+"likes": 1
+}
