@@ -1,9 +1,12 @@
-const app = require('./app')
-const config = require('./util/config')
-const logger = require('./util/logger')
+const app = require('./app');
+const config = require('./utils/config');
+const mongoose = require('mongoose');
 
+mongoose.connect(config.MONGODB_URI);
 
-const PORT  = config.PORT
-app.listen(config.PORT,() => {
-  logger.info(`Server running on port ${config.PORT}`)
-})
+app.listen(config.PORT, () => {
+    console.log(`Server running on port ${config.PORT}`);
+  }).on('error', (error) => {
+    console.error('Error starting the server:', error.message);
+  });
+  

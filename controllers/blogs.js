@@ -1,21 +1,30 @@
-const blogsRouter = require('express').Router()
-const Blog = require('../models/Blog')
+const blogsRouter = require('express').Router();
+const Blog = require('../models/blog'); 
 
-blogsRouter.get('/api/blogs',(request,response) => {
-  Blog.find({})
-  .then(blogs => {
-    response.json(blogs)
-  })
-  .catch(error => logger.info(error.message))
-})
+blogsRouter.get('/', (request, response) => {
+  Blog
+    .find({})
+    .then(blogs => {
+      response.json(blogs);
+    })
+    .catch(error => {
+      console.error(error);
+      response.status(500).json({ error: 'Internal Server Error' });
+    });
+});
 
-blogsRouter.post('/api/blogs',(request,response) => {
-  const blog = new Blog(request.body)
+blogsRouter.post('/', (request, response) => {
+  const blog = new Blog(request.body);
 
-  blog.save()
-  .then(result => {
-    response.status(201).json(result)
-  })
-})
+  blog
+    .save()
+    .then(result => {
+      response.status(201).json(result);
+    })
+    .catch(error => {
+      console.error(error);
+      response.status(500).json({ error: 'Internal Server Error' });
+    });
+});
 
-module.exports = blogsRouter
+module.exports = blogsRouter;
