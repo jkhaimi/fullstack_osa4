@@ -111,6 +111,35 @@ test('blog without a title or an url is not added', async () => {
   expect(response.body).toHaveLength(initialBlogs.length)
 })
 
+// Testataan blogin poistamista
+test('deleting a blog by ID', async () => {
+  const initialBlogs = await api.get('/api/blogs');
+  const blogToDelete = initialBlogs.body[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204);
+
+  const blogsAfterDelete = await api.get('/api/blogs');
+  const blogIds = blogsAfterDelete.body.map(blog => blog.id);
+
+  expect(blogIds).not.toContain(blogToDelete.id);
+});
+
+// Testataan että blogin päivittäminen toimii
+test('updating a blog by ID', async () => {
+  const initialBlogs = await api.get('/api/blogs');
+  const blogToUpdate = initialBlogs.body[0]; 
+  const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 };
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200);
+
+  expect(response.body.likes).toEqual(updatedBlog.likes);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
