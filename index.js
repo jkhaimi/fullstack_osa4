@@ -1,6 +1,8 @@
 const app = require('./app');
 const config = require('./utils/config');
 const mongoose = require('mongoose');
+const supertest = require('supertest');
+const api = supertest(app)
 
 mongoose.connect(config.MONGODB_URI);
 
