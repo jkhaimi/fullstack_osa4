@@ -2,17 +2,32 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const Blog = require('../models/blog');
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 const api = supertest(app);
 
+const users = [
+  {
+    username: 'jkhaimi',
+    _id: 123,
+  },
+  {
+    username: 'matti',
+    _id: 456,
+  },
+]
+
 const initialBlogs = [
   {
+    id: 1,
     title: 'Miumau',
     author: 'Author 1',
     url: 'http://example.com/blog1',
     likes: 5,
   },
   {
+    id: 2,
     title: 'Purrrfect',
     author: 'Author 2',
     url: 'http://example.com/blog2',
@@ -33,7 +48,7 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
-
+describe('The returning of blogs', () => {
 // Testataan että blogit palautetaan halutussa muodossa
 test('blogs are returned as JSON', async () => {
   await api
@@ -50,8 +65,9 @@ test('returned blogs have "id" field', async () => {
   expect(response.body[0]).toBeDefined();
   expect(response.body[0].id).toBeDefined();
 });
+})
 
-
+describe('The adding of blogs', () => {
 // Testataan että blogi voidaan lisätä onnistuneesti
 test('a valid blog can be added ', async () => {
   const newBlog = {
@@ -76,7 +92,6 @@ test('a valid blog can be added ', async () => {
     'testBlog'
   )
 })
-
 
 // Testataan että blogi ilman likejä saa arvokseen 0
 test('likes field is set to 0 if not provided', async () => {
@@ -110,7 +125,9 @@ test('blog without a title or an url is not added', async () => {
 
   expect(response.body).toHaveLength(initialBlogs.length)
 })
+})
 
+describe('The deletion and changing of blogs', () => {
 // Testataan blogin poistamista
 test('deleting a blog by ID', async () => {
   const initialBlogs = await api.get('/api/blogs');
@@ -139,6 +156,8 @@ test('updating a blog by ID', async () => {
 
   expect(response.body.likes).toEqual(updatedBlog.likes);
 });
+})
+
 
 afterAll(async () => {
   await mongoose.connection.close();

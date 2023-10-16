@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const blogsRouter = require('./controllers/blogs');
+const usersRouter = require('./controllers/users')
 const middleware = require('./utils/middleware');
 require('dotenv').config();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(middleware.requestLogger);
 
 app.use('/api/blogs', blogsRouter);
+app.use('/api/users', usersRouter)
 
 app.get('/', (request, response) => {
   response.send('<h1>Kissa</h1>');
