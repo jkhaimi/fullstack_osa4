@@ -20,14 +20,12 @@ const users = [
 
 const initialBlogs = [
   {
-    id: 1,
     title: 'Miumau',
     author: 'Author 1',
     url: 'http://example.com/blog1',
     likes: 5,
   },
   {
-    id: 2,
     title: 'Purrrfect',
     author: 'Author 2',
     url: 'http://example.com/blog2',
@@ -42,6 +40,7 @@ beforeAll(async () => {
 beforeEach(async () => {
 
   await Blog.deleteMany({})
+  await User.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
   await blogObject.save()
   blogObject = new Blog(initialBlogs[1])
@@ -158,6 +157,67 @@ test('updating a blog by ID', async () => {
 });
 })
 
+// Käyttäjän luomiseen liittyvät testit
+describe('User creation and validation', () => {
+  test('Creating a valid user returns a 201 status', async () => {
+    const newUser = {
+      username: 'testuser',
+      name: 'Test User',
+      password: 'testpassword',
+    };
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    // Add further validation if needed
+  });
+
+  test('Creating a user with a short username returns a 400 status and appropriate error message', async () => {
+    const invalidUser = {
+      username: 'ab',
+      name: 'Invalid User',
+      password: 'testpassword',
+    };
+
+    const response = await api
+      .post('/api/users')
+      .send(invalidUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.error).toBe('Username and password must be at least 3 characters long');
+  });
+
+  test('Creating a user with a non-unique username returns a 400 status and appropriate error message', async () => {
+    const initialUser = {
+      username: 'existinguser',
+      name: 'Existing User',
+      password: 'testpassword',
+    };
+
+    await api
+      .post('/api/users')
+      .send(initialUser)
+      .expect(201);
+
+    const duplicateUser = {
+      username: 'existinguser',
+      name: 'Duplicate User',
+      password: 'testpassword',
+    };
+
+    const response = await api
+      .post('/api/users')
+      .send(duplicateUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(response.body.error).toBe('Username must be unique');
+  });
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
