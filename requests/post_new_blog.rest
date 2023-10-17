@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpraGFpbWkiLCJpZCI6IjY1MmU5ZjhlOTUxMzJmMWU4NDJiNzNjNCIsImlhdCI6MTY5NzU1NDMyM30.dlUMbfbzX9gca7RGqmsBww0CbkMeEEk8D0H0emq9SWs
 
 {
-"title": "blogi", 
-"author": "Juuso",
+"title": "kissa", 
+"author": "Matti",
 "url": "http://kissa.com",
 "likes": 69
 }
