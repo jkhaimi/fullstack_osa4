@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpraGFpbWkiLCJpZCI6IjY1MmU1NTQwYWIwNjlhMDYwNGRkMzUzZiIsImlhdCI6MTY5NzU0MTcxMH0.fseswBXd7UwRKArJ-ZrA9qSTW8S7aiu-bZc4qClOEvw
 
 {
-"title": "MARRA", 
-"author": "Jonne",
+"title": "blogi2", 
+"author": "Matti",
 "url": "http://kissa.com",
-"likes": 1,
-"userId": "652e3645565982e09daa61b0"
+"likes": 69
 }
