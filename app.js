@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const blogsRouter = require('./controllers/blogs');
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
-const middleware = require('./utils/middleware');
+const middleware = require('./utils/middleware')
 require('dotenv').config();
 
 mongoose.connect(process.env.MONGODB_URI)
@@ -19,10 +19,11 @@ mongoose.connect(process.env.MONGODB_URI)
 
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
-
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(middleware.getTokenFrom)
+
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter)
