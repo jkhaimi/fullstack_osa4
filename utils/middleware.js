@@ -19,7 +19,7 @@ const requestLogger = (request, response, next) => {
     next(error);
   };
 
-  const getTokenFrom = (request, response, next) => {
+  const tokenExtractor = (request, response, next) => {
     const authorization = request.get('authorization');
     if (authorization && authorization.startsWith('Bearer ')) {
       const token = authorization.replace('Bearer ', '');
@@ -29,11 +29,27 @@ const requestLogger = (request, response, next) => {
     }
     next();
   };
-  
+
+  const userExtractor = (request, response, next) => {
+    const authorization = request.get('authorization');
+    if (authorization && authorization.startsWith('Bearer ')) {
+      const token = authorization.replace('Bearer ', '');
+      try {
+        const decodedToken = jwt.verify(token, process.env.SECRET);
+        request.user = decodedToken; // Lisää käyttäjätieto request-olioon
+      } catch (error) {
+        request.user = null;
+      }
+    } else {
+      request.user = null;
+    }
+    next();
+  };
   
   module.exports = {
     requestLogger,
     unknownEndpoint,
     errorHandler,
-    getTokenFrom
+    tokenExtractor,
+    userExtractor
   };

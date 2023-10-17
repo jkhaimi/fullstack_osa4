@@ -1,8 +1,9 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog'); 
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-const getTokenFrom = require('../utils/middleware').getTokenFrom;
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const tokenExtractor = require('../utils/middleware').tokenExtractor;
+const userExtractor = require('../utils/middleware').userExtractor; 
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -11,7 +12,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', userExtractor, async (request, response) => {
   const body = request.body;
   const token = request.token;
 
@@ -24,7 +25,7 @@ blogsRouter.post('/', async (request, response) => {
   }
 
   if (!token) {
-    return response.status(401).json({ error: 'token invalid' });
+    return response.status(401).json({ error: 'Token invalid' });
   }
 
   try {
@@ -45,12 +46,11 @@ blogsRouter.post('/', async (request, response) => {
 
     response.status(201).json(savedBlog);
   } catch (error) {
-    return response.status(401).json({ error: 'token invalid' });
+    return response.status(401).json({ error: 'Token invalid' });
   }
 });
 
-
-blogsRouter.delete('/:id', getTokenFrom, async (request, response) => {
+blogsRouter.delete('/:id', tokenExtractor, async (request, response) => {
   try {
     const blog = await Blog.findById(request.params.id);
     const token = request.token;
@@ -72,18 +72,16 @@ blogsRouter.delete('/:id', getTokenFrom, async (request, response) => {
   }
 });
 
-
 blogsRouter.put('/:id', async (request, response) => {
-
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      request.params.id,
-      request.body,
-      { new: true }
-    );
-    
-    if (updatedBlog) {
-      response.json(updatedBlog);
-    }
-  });
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    { new: true }
+  );
+  
+  if (updatedBlog) {
+    response.json(updatedBlog);
+  }
+});
 
 module.exports = blogsRouter;

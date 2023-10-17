@@ -22,7 +22,8 @@ console.log('MONGODB_URI:', process.env.MONGODB_URI);
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
-app.use(middleware.getTokenFrom)
+app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
 
 
 app.use('/api/blogs', blogsRouter);

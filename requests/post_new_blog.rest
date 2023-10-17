@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpraGFpbWkiLCJpZCI6IjY1MmU1NTQwYWIwNjlhMDYwNGRkMzUzZiIsImlhdCI6MTY5NzU0MTcxMH0.fseswBXd7UwRKArJ-ZrA9qSTW8S7aiu-bZc4qClOEvw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpraGFpbWkiLCJpZCI6IjY1MmU1NTQwYWIwNjlhMDYwNGRkMzUzZiIsImlhdCI6MTY5NzU0ODUxMH0.V9y1IPV6qW2x8JGeqoJqGNlmdj7rwwYgplGdfSTw_kg
 
 {
-"title": "blogi3", 
+"title": "blogi6", 
 "author": "Juuso",
 "url": "http://kissa.com",
 "likes": 69
