@@ -2,9 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-"title": "FAFAS", 
+"title": "MARRA", 
 "author": "Jonne",
 "url": "http://kissa.com",
 "likes": 1,
-"user": 123
+"userId": "652e3645565982e09daa61b0"
 }

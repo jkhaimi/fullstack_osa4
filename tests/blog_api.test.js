@@ -7,16 +7,16 @@ const User = require('../models/user')
 
 const api = supertest(app);
 
-const users = [
-  {
-    username: 'jkhaimi',
-    _id: 123,
-  },
-  {
-    username: 'matti',
-    _id: 456,
-  },
-]
+// const initialUsers = [
+//   {
+//     username: 'jkhaimi',
+//     _id: new mongoose.Types.ObjectId(),
+//   },
+//   {
+//     username: 'matti',
+//     _id: new mongoose.Types.ObjectId(),
+//   },
+// ]
 
 const initialBlogs = [
   {
@@ -24,12 +24,14 @@ const initialBlogs = [
     author: 'Author 1',
     url: 'http://example.com/blog1',
     likes: 5,
+    // user: initialUsers[0]._id, 
   },
   {
     title: 'Purrrfect',
     author: 'Author 2',
     url: 'http://example.com/blog2',
     likes: 3,
+    // user: initialUsers[0]._id,
   },
 ];
 
@@ -39,8 +41,13 @@ beforeAll(async () => {
 
 beforeEach(async () => {
 
+  // await User.deleteMany({})
+  // let userObject = new User(initialUsers[0])
+  // await userObject.save()
+  // userObject = new User(initialUsers[1])
+  // await userObject.save()
+
   await Blog.deleteMany({})
-  await User.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
   await blogObject.save()
   blogObject = new Blog(initialBlogs[1])
