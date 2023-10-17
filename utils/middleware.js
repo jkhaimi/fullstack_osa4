@@ -22,7 +22,8 @@ const requestLogger = (request, response, next) => {
   const getTokenFrom = (request, response, next) => {
     const authorization = request.get('authorization');
     if (authorization && authorization.startsWith('Bearer ')) {
-      request.token = authorization.replace('Bearer ', '');
+      const token = authorization.replace('Bearer ', '');
+      request.token = token;
     } else {
       request.token = null;
     }
