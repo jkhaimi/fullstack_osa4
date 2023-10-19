@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/Blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,9 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
 
   const loadUserToken = () => {
     const storedUser = window.localStorage.getItem('loggedInUser');
@@ -26,6 +30,7 @@ const App = () => {
 
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
+
   
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -40,14 +45,28 @@ const App = () => {
       setPassword('')
       window.localStorage.setItem('loggedInUser', JSON.stringify(user));
 
+      setSuccessMessage(`logged in successfully`);
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+      
     } catch {
+      setErrorMessage(`wrong username or password`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
   }
 }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
     setUser(null);
+    setSuccessMessage(`logged out successfully`);
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 3000);
   };
+
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
@@ -64,10 +83,20 @@ const App = () => {
       setTitle('');
       setAuthor('');
       setUrl('');
-
       setBlogs([...blogs, response]);
+
+      console.log("Added a new blog")
+      setSuccessMessage(`Added a new blog ${newBlog.title} by ${newBlog.author}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
+
     } catch (error) {
       console.error('Error creating a new blog:', error);
+      setErrorMessage(`Failed to add a new blog`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
     }
   };
 
@@ -75,6 +104,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification errorMessage={errorMessage} successMessage={successMessage} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -103,6 +133,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification errorMessage={errorMessage} successMessage={successMessage} />
       <> {user.name} logged in </>
       <button style={{ marginBottom: "20px" }} onClick={handleLogout}>
         Logout
