@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
-import blogService from './services/Blogs'
-import loginService from './services/login'
-import Notification from './components/Notification'
+import { useState, useEffect } from 'react';
+import Blog from './components/Blog';
+import blogService from './services/Blogs';
+import loginService from './services/login';
+import Notification from './components/Notification';
+import CreateBlogForm from './components/NewBlogForm';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
-  const [user, setUser] = useState(null)
+  const [blogs, setBlogs] = useState([]);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
-
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [blogFormVisible, setBlogFormVisible] = useState(false);
 
   const loadUserToken = () => {
     const storedUser = window.localStorage.getItem('loggedInUser');
@@ -31,42 +32,40 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
-  
   const handleLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
-    console.log('logging in with', username, password)
+      console.log('logging in with', username, password);
       const user = await loginService.login({
-        username, password,
-      })
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+        username,
+        password,
+      });
+      blogService.setToken(user.token);
+      setUser(user);
+      setUsername('');
+      setPassword('');
       window.localStorage.setItem('loggedInUser', JSON.stringify(user));
 
-      setSuccessMessage(`logged in successfully`);
+      setSuccessMessage('Logged in successfully');
       setTimeout(() => {
         setSuccessMessage(null);
       }, 3000);
-      
     } catch {
-      setErrorMessage(`wrong username or password`);
+      setErrorMessage('Wrong username or password');
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
-  }
-}
+    }
+  };
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
     setUser(null);
-    setSuccessMessage(`logged out successfully`);
+    setSuccessMessage('Logged out successfully');
     setTimeout(() => {
       setSuccessMessage(null);
     }, 3000);
   };
-
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
@@ -84,16 +83,16 @@ const App = () => {
       setAuthor('');
       setUrl('');
       setBlogs([...blogs, response]);
+      setBlogFormVisible(false)
 
-      console.log("Added a new blog")
+      console.log('Added a new blog');
       setSuccessMessage(`Added a new blog ${newBlog.title} by ${newBlog.author}`);
-          setTimeout(() => {
-            setSuccessMessage(null);
-          }, 3000);
-
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
     } catch (error) {
       console.error('Error creating a new blog:', error);
-      setErrorMessage(`Failed to add a new blog`);
+      setErrorMessage('Failed to add a new blog');
       setTimeout(() => {
         setErrorMessage(null);
       }, 3000);
@@ -134,38 +133,31 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification errorMessage={errorMessage} successMessage={successMessage} />
-      <> {user.name} logged in </>
-      <button style={{ marginBottom: "20px" }} onClick={handleLogout}>
+      <> {user && `${user.name} logged in`} </>
+      <button style={{ marginBottom: '20px' }} onClick={handleLogout}>
         Logout
       </button>
-      <h2>create new</h2>
-      <form onSubmit={handleNewBlog}>
+      <br></br>
+      <button onClick={() => setBlogFormVisible(true)}>New blog</button>
+      {blogFormVisible && (
         <div>
-          title:
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+          <CreateBlogForm
+            handleNewBlog={handleNewBlog}
+            setTitle={setTitle}
+            setAuthor={setAuthor}
+            setUrl={setUrl}
+            title={title}
+            author={author}
+            url={url}
           />
+          <button
+            style={{ marginBottom: '20px' }}
+            onClick={() => setBlogFormVisible(false)}
+          >
+            cancel
+          </button>
         </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
+      )}
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
@@ -173,4 +165,4 @@ const App = () => {
   );
 };
 
-export default App
+export default App;
