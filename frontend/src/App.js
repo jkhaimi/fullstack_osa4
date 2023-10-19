@@ -6,6 +6,7 @@ import Notification from './components/Notification';
 import CreateBlogForm from './components/BlogForm';
 
 const App = () => {
+  const [blog, setBlog] = useState('')
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -83,7 +84,7 @@ const App = () => {
       setAuthor('');
       setUrl('');
       setBlogs([...blogs, { ...response, user: user }]);
-      setBlogFormVisible(false)
+      setBlogFormVisible(false);
 
       console.log('Added a new blog');
       setSuccessMessage(`Added a new blog ${newBlog.title} by ${newBlog.author}`);
@@ -97,7 +98,26 @@ const App = () => {
         setErrorMessage(null);
       }, 3000);
     }
-  }
+  };
+
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id,
+    };
+
+    try {
+      const response = await blogService.update(blog.id, updatedBlog);
+      const updatedBlogs = blogs.map((b) => (b.id === blog.id ? response : b));
+      setBlogs(updatedBlogs);
+    } catch (error) {
+      console.error('Error updating blog:', error);
+    }
+  };
+
+  const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes);
+
 
   if (user === null) {
     return (
@@ -158,8 +178,8 @@ const App = () => {
           </button>
         </div>
       )}
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+      {sortedBlogs.map((blog) => (
+        <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
       ))}
     </div>
   );

@@ -12,6 +12,23 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
+blogsRouter.get('/:id', async (request, response) => {
+  try {
+    const blog = await Blog.findById(request.params.id).populate('user', {
+      username: 1,
+      name: 1,
+    });
+
+    if (!blog) {
+      return response.status(404).json({ error: 'Blog not found' });
+    }
+
+    response.json(blog);
+  } catch (error) {
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 blogsRouter.post('/', userExtractor, async (request, response) => {
   const body = request.body;
   const token = request.token;
