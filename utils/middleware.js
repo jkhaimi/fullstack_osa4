@@ -35,6 +35,7 @@ const requestLogger = (request, response, next) => {
     if (authorization && authorization.startsWith('Bearer ')) {
       const token = authorization.replace('Bearer ', '');
       try {
+        // eslint-disable-next-line no-undef
         const decodedToken = jwt.verify(token, process.env.SECRET);
         request.user = decodedToken; // Lisää käyttäjätieto request-olioon
       } catch (error) {

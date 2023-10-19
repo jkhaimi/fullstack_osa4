@@ -6,7 +6,6 @@ import Notification from './components/Notification';
 import CreateBlogForm from './components/BlogForm';
 
 const App = () => {
-  const [blog, setBlog] = useState('')
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -100,19 +99,22 @@ const App = () => {
     }
   };
 
-  const handleLike = async (blog) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id,
-    };
-
-    try {
-      const response = await blogService.update(blog.id, updatedBlog);
-      const updatedBlogs = blogs.map((b) => (b.id === blog.id ? response : b));
-      setBlogs(updatedBlogs);
-    } catch (error) {
-      console.error('Error updating blog:', error);
+  const handleRemoveBlog = async (blogId) => {
+    if (window.confirm('Are you sure you want to remove this blog?')) {
+      try {
+        await blogService.remove(blogId);
+        setBlogs(blogs.filter((blog) => blog.id !== blogId)); // Remove the deleted blog from the list.
+        setSuccessMessage('Blog removed successfully');
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+      } catch (error) {
+        console.error('Error removing blog:', error);
+        setErrorMessage('Failed to remove the blog');
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      }
     }
   };
 
@@ -178,9 +180,9 @@ const App = () => {
           </button>
         </div>
       )}
-      {sortedBlogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
-      ))}
+{sortedBlogs.map((blog) => (
+  <Blog key={blog.id} blog={blog} handleRemoveBlog={handleRemoveBlog} />
+))}
     </div>
   );
 };

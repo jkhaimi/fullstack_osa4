@@ -46,6 +46,7 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   }
 
   try {
+    // eslint-disable-next-line no-undef
     const decodedToken = jwt.verify(token, process.env.SECRET);
     const user = await User.findById(decodedToken.id);
 
@@ -76,6 +77,7 @@ blogsRouter.delete('/:id', tokenExtractor, async (request, response) => {
       return response.status(404).json({ error: 'Blog not found' });
     }
 
+    // eslint-disable-next-line no-undef
     const decodedToken = jwt.verify(token, process.env.SECRET);
 
     if (blog.user.toString() !== decodedToken.id) {

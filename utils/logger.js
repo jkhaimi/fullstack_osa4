@@ -1,12 +1,13 @@
 const info = (...params) => {
 
+  // eslint-disable-next-line no-undef
   if (process.env.NODE_ENV !== 'test') { 
     console.log(...params)
   }
 }
 
 const error = (error, request, response, next) => {
-  logger.error(error.message)
+  error(error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
