@@ -3,7 +3,7 @@ import Blog from './components/Blog';
 import blogService from './services/Blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
-import CreateBlogForm from './components/NewBlogForm';
+import CreateBlogForm from './components/BlogForm';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -97,7 +97,7 @@ const App = () => {
         setErrorMessage(null);
       }, 3000);
     }
-  };
+  }
 
   if (user === null) {
     return (
@@ -138,7 +138,7 @@ const App = () => {
         Logout
       </button>
       <br></br>
-      <button onClick={() => setBlogFormVisible(true)}>New blog</button>
+      <button style={{marginBottom: '20px'}} onClick={() => setBlogFormVisible(true)}>New blog</button>
       {blogFormVisible && (
         <div>
           <CreateBlogForm
