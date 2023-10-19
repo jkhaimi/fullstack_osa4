@@ -82,7 +82,7 @@ const App = () => {
       setTitle('');
       setAuthor('');
       setUrl('');
-      setBlogs([...blogs, response]);
+      setBlogs([...blogs, { ...response, user: user }]);
       setBlogFormVisible(false)
 
       console.log('Added a new blog');
